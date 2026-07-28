@@ -22,7 +22,7 @@ def get_engine():
         st.error(f"Error al crear el engine: {str(e)[:200]}")
         return None
 
-def guardar_respuesta(ley_id, respuesta, presupuestal, juridico, social):
+def guardar_respuesta(ley_id, respuesta, presupuestal, juridico, social, user):
     "Inserta una opinión en la base de datos."
     engine = get_engine()
     if engine is None:
@@ -31,14 +31,15 @@ def guardar_respuesta(ley_id, respuesta, presupuestal, juridico, social):
         with engine.connect() as conn:
             conn.execute(text("""
                 INSERT INTO copraedeg_opiniones
-                (ley_id, respuesta, impacto_presupuestal, impacto_juridico, impacto_social)
-                VALUES (:ley_id, :resp, :pres, :jur, :soc)
+                (ley_id, respuesta, impacto_presupuestal, impacto_juridico, impacto_social, user)
+                VALUES (:ley_id, :resp, :pres, :jur, :soc, :user)
             """), {
                 "ley_id": ley_id,
                 "resp": respuesta,
                 "pres": 1 if presupuestal else 0,
                 "jur": " | ".join(juridico) if juridico else None,
                 "soc": " | ".join(social) if social else None,
+                "user": user
             })
             conn.commit()
         return True

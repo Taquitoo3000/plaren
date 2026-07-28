@@ -3,6 +3,14 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 from database import get_catalogo, guardar_respuesta
 
+st.markdown("""
+    <style>
+    [data-testid="stHeaderActionElements"] {
+        display: none !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 st.set_page_config(
     page_title="PLAREN",
     page_icon="assets/icon_sectech.png",
@@ -11,13 +19,6 @@ st.set_page_config(
         'About': "# PLAREN\nPlataforma de Revisión Normativa."
     }
 )
-st.markdown("""
-    <style>
-    [data-testid="stHeaderActionElements"] {
-        display: none !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
 
 # ============================================
 # NAVEGACIÓN CON SESSION STATE
@@ -27,6 +28,9 @@ if "pagina" not in st.session_state:
 
 if "capitulo_actual" not in st.session_state:
     st.session_state.capitulo_actual = None
+
+if "autenticado" not in st.session_state:
+    st.session_state.autenticado = False
 
 
 def ir_a_capitulo(nombre_capitulo):
@@ -47,20 +51,7 @@ def volver_a_inicio():
             del st.session_state[k]
     st.rerun()
 
-def render_footer():
-    st.markdown("""
-    <hr>
-    <div style="text-align: center; color: grey; font-size: 0.9em;">
-        © 2026 COPRAEDEG |
-        Desarrollado por <a href="https://taquitoo3000.github.io/isael/" style="color: mediumorchid;">SECtech</a>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-# ============================================
-# PÁGINA DE INICIO — ÍNDICE DE 8 CAPÍTULOS
-# ============================================
-if st.session_state.pagina == "inicio":
+def render_header():
     # LOGOS
     col1, col2, col3 = st.columns([1, 0.5, 1])
     with col1:
@@ -82,6 +73,57 @@ if st.session_state.pagina == "inicio":
             <h4 style="color: white; margin: 0;">Plataforma de Revisión Normativa del Consejo para Prevenir, Atender y Erradicar la Discriminación en el Estado de Guanajuato</h4>
         </div>
     """, unsafe_allow_html=True)
+
+def render_footer():
+    st.markdown("""
+    <hr>
+    <div style="text-align: center; color: grey; font-size: 0.9em;">
+        © 2026 COPRAEDEG |
+        Desarrollado por <a href="https://taquitoo3000.github.io/isael/" style="color: mediumorchid;">SECtech</a>
+    </div>
+    """, unsafe_allow_html=True)
+
+# ---------- PANTALLA DE LOGIN ----------
+if not st.session_state.autenticado:
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        render_header()
+        
+        user = st.selectbox(
+            "Integrante:",
+            options= [
+                'Presidencia del Consejo',
+                'Secretaría Ejecutiva del Consejo (PRODHEG)',
+                'Secretaría de Gobierno',
+                'Secretaría del Nuevo Comienzo',
+                'Secretaría de Derechos Humanos',
+                'Secretaría de Educación',
+                'Secretaría de Salud',
+                'Secretaría de las Mujeres',
+                'Dirección General del Sistema para el Desarrollo Integral de la Familia del Estado de Guanajuato',
+                'Procuraduría Estatal de Protección de Niñas, Niños y Adolescentes del Estado de Guanajuato',
+                'Secretaría Ejecutiva del Sistema de Protección de los derechos de Niñas, Niños y Adolescentes del Estado de Guanajuato:',
+                'Presidencia Municipal de Guanajuato',
+                'Presidencia Municipal de Moroleón',
+                'Presidencia Municipal de Silao de la Victoria',
+                'Presidencia Municipal de San Luis de la Paz',
+                'Sectretaría Instructora'
+            ],
+            index=None,
+            key='sel_miembro'
+        )
+        if st.button("Ingresar", width='stretch',disabled=(user is None)):
+            if user:
+                st.session_state.autenticado = True
+                st.session_state.usuario = user
+                st.rerun()
+    st.stop()  # Esto evita que se cargue el resto de la app
+# ============================================
+# PÁGINA DE INICIO — ÍNDICE DE 8 CAPÍTULOS
+# ============================================
+if st.session_state.pagina == "inicio":
+    render_header()
+    st.badge(f"Integrante: 👤 **{st.session_state.usuario}**")
     st.markdown("### Índice")
     st.divider()
 
@@ -108,6 +150,7 @@ elif st.session_state.pagina == "capitulo":
         volver_a_inicio()
 
     st.title(f"📖 {capitulo}")
+    st.badge(f"Integrante: 👤 **{st.session_state.usuario}**")
     st.divider()
 
     # ---------- 1. ¿SELECCIONAR SECCIÓN? ----------
@@ -242,7 +285,7 @@ elif st.session_state.pagina == "capitulo":
         else:
             ley_final = ley if jur_bolean else []
             grupo_vul_final = grupo_vul if soc_bolean else []
-            exito = guardar_respuesta(int(ley_id.iloc[0]), opinion.strip(), presupues, ley_final, grupo_vul_final)
+            exito = guardar_respuesta(int(ley_id.iloc[0]), opinion.strip(), presupues, ley_final, grupo_vul_final, st.session_state.usuario)
             if exito:
                 st.success("✅ ¡Opinión guardada correctamente!")
                 st.balloons()
