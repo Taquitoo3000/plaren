@@ -61,6 +61,13 @@ def render_footer():
 # PÁGINA DE INICIO — ÍNDICE DE 8 CAPÍTULOS
 # ============================================
 if st.session_state.pagina == "inicio":
+    # LOGOS
+    col1, col2, col3 = st.columns([1, 0.5, 1])
+    with col1:
+        st.image("assets/prodheg_horizontal.png", width='stretch')
+    with col3:
+        st.image("assets/segob_logo.png", width='stretch')
+
     st.title("PLAREN",text_alignment="center")
     #st.subheader("Plataforma de Revisión Normativa del Consejo para Prevenir, Atender y Erradicar la Discriminación en el Estado de Guanajuato",
     #             text_alignment="center")
@@ -209,7 +216,7 @@ elif st.session_state.pagina == "capitulo":
                 'Niñas, niños y adolescentes',
                 'Periodistas',
                 'Persona en situación de movilidad',
-                'Personas de edad',
+                'Personas adultas mayores',
                 'Personas de la diversidad sexogenérica',
                 'Personas defensoras de Derechos Humanos -Activistas-',
                 'Personas defensoras de Derechos Humanos -Colectivos de Búsqueda de Personas Desaparecidas-',
