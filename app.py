@@ -117,6 +117,7 @@ if not st.session_state.autenticado:
                 st.session_state.autenticado = True
                 st.session_state.usuario = user
                 st.rerun()
+        render_footer()
     st.stop()  # Esto evita que se cargue el resto de la app
 # ============================================
 # PÁGINA DE INICIO — ÍNDICE DE 8 CAPÍTULOS
