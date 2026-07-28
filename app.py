@@ -3,14 +3,6 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 from database import get_catalogo, guardar_respuesta
 
-st.markdown("""
-    <style>
-    [data-testid="stHeaderActionElements"] {
-        display: none !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
-
 st.set_page_config(
     page_title="PLAREN",
     page_icon="assets/icon_sectech.png",
@@ -20,9 +12,14 @@ st.set_page_config(
     }
 )
 
-# OCULAR BURBUJA
+# OCULACIONES
 st.markdown("""
     <style>
+    /* Quitar cadenas de los headers */
+    [data-testid="stHeaderActionElements"] {
+        display: none !important;
+    }
+
     /* Oculta el toolbar de Streamlit Cloud (foto, Manage app, etc.) */
     [data-testid="stAppToolbar"] {
         display: none !important;
@@ -36,6 +33,11 @@ st.markdown("""
     /* Oculta el menú hamburguesa y footer clásico */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
+
+    /* Ocultar footer "Made with Streamlit" */
+    footer {
+        visibility: hidden;
+    }
     </style>
 """, unsafe_allow_html=True)
 
