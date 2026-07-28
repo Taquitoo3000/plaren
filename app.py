@@ -31,6 +31,15 @@ def volver_a_inicio():
             del st.session_state[k]
     st.rerun()
 
+def render_footer():
+    st.markdown("""
+    <hr>
+    <div style="text-align: center; color: grey; font-size: 0.9em;">
+        © 2026 COPRAEDEG |
+        Desarrollado por <a href="https://taquitoo3000.github.io/isael/" style="color: mediumorchid;">SECtech</a>
+    </div>
+    """, unsafe_allow_html=True)
+
 
 # ============================================
 # PÁGINA DE INICIO — ÍNDICE DE 8 CAPÍTULOS
@@ -203,3 +212,5 @@ elif st.session_state.pagina == "capitulo":
                 st.balloons()
             else:
                 st.error("❌ No se pudo guardar.")
+
+render_footer()
