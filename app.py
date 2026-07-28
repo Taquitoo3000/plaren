@@ -3,6 +3,22 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 from database import get_catalogo, guardar_respuesta
 
+st.set_page_config(
+    page_title="PLAREN",
+    page_icon="assets/icon_sectech.png",
+    menu_items={
+        'Report a bug': 'https://sectechnologies.vercel.app/',
+        'About': "# PLAREN\nPlataforma de Revisión Normativa."
+    }
+)
+st.markdown("""
+    <style>
+    [data-testid="stHeaderActionElements"] {
+        display: none !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # ============================================
 # NAVEGACIÓN CON SESSION STATE
 # ============================================
@@ -45,7 +61,20 @@ def render_footer():
 # PÁGINA DE INICIO — ÍNDICE DE 8 CAPÍTULOS
 # ============================================
 if st.session_state.pagina == "inicio":
-    st.title("📚 Consulta de Opiniones")
+    st.title("PLAREN",text_alignment="center")
+    #st.subheader("Plataforma de Revisión Normativa del Consejo para Prevenir, Atender y Erradicar la Discriminación en el Estado de Guanajuato",
+    #             text_alignment="center")
+    st.markdown("""
+        <div style="
+            background: #8055AB;
+            padding: 0px;
+            border-radius: 12px;
+            margin-bottom: 0px;
+            text-align: center;
+        ">
+            <h4 style="color: white; margin: 0;">Plataforma de Revisión Normativa del Consejo para Prevenir, Atender y Erradicar la Discriminación en el Estado de Guanajuato</h4>
+        </div>
+    """, unsafe_allow_html=True)
     st.markdown("### Índice")
     st.divider()
 
