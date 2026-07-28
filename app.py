@@ -285,7 +285,7 @@ elif st.session_state.pagina == "capitulo":
         else:
             ley_final = ley if jur_bolean else []
             grupo_vul_final = grupo_vul if soc_bolean else []
-            exito = guardar_respuesta(int(ley_id.iloc[0]), opinion.strip(), presupues, ley_final, grupo_vul_final, st.session_state.usuario)
+            exito = guardar_respuesta(int(ley_id.iloc[0]), opinion.strip(), presupues, ley_final, grupo_vul_final, str(st.session_state.usuario))
             if exito:
                 st.success("✅ ¡Opinión guardada correctamente!")
                 st.balloons()
