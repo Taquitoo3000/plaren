@@ -20,6 +20,25 @@ st.set_page_config(
     }
 )
 
+# OCULAR BURBUJA
+st.markdown("""
+    <style>
+    /* Oculta el toolbar de Streamlit Cloud (foto, Manage app, etc.) */
+    [data-testid="stAppToolbar"] {
+        display: none !important;
+    }
+    
+    /* Oculta el header completo si persiste algo */
+    [data-testid="stAppViewContainer"] > header {
+        display: none !important;
+    }
+    
+    /* Oculta el menú hamburguesa y footer clásico */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    </style>
+""", unsafe_allow_html=True)
+
 # ============================================
 # NAVEGACIÓN CON SESSION STATE
 # ============================================
