@@ -3,6 +3,9 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 from database import get_catalogo, guardar_respuesta
 
+# ============================================
+# SEETINGS
+# ============================================
 st.set_page_config(
     page_title="PLAREN",
     page_icon="assets/icon_sectech.png",
@@ -11,7 +14,6 @@ st.set_page_config(
         'About': "# PLAREN\nPlataforma de Revisión Normativa."
     }
 )
-
 # OCULACIONES
 st.markdown("""
     <style>
@@ -25,6 +27,8 @@ st.markdown("""
 # ============================================
 # NAVEGACIÓN CON SESSION STATE
 # ============================================
+catalogo, leyes = get_catalogo()
+
 if "pagina" not in st.session_state:
     st.session_state.pagina = "inicio"
 
@@ -34,21 +38,34 @@ if "capitulo_actual" not in st.session_state:
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 
+if "ley_seleccionada" not in st.session_state:
+    st.session_state.ley_seleccionada = None
 
+# ============================================
+# FUNCTIONS
+# ============================================
 def ir_a_capitulo(nombre_capitulo):
     st.session_state.capitulo_actual = nombre_capitulo
     st.session_state.pagina = "capitulo"
     # Limpiar selects al entrar a un capítulo nuevo
-    for k in ["sel_seccion", "sel_articulo", "sel_fraccion"]:
+    for k in ["sel_seccion", "sel_articulo", "sel_fraccion", "sel_resumen"]:
         if k in st.session_state:
             del st.session_state[k]
     st.rerun()
 
-
 def volver_a_inicio():
     st.session_state.pagina = "inicio"
     st.session_state.capitulo_actual = None
-    for k in ["sel_seccion", "sel_articulo", "sel_fraccion"]:
+    for k in ["sel_seccion", "sel_articulo", "sel_fraccion", "sel_resumen"]:
+        if k in st.session_state:
+            del st.session_state[k]
+    st.rerun()
+
+def volver_a_seleccion_ley():
+    st.session_state.ley_seleccionada = None
+    st.session_state.pagina = "inicio"
+    st.session_state.capitulo_actual = None
+    for k in ["sel_seccion", "sel_articulo", "sel_fraccion", "sel_resumen"]:
         if k in st.session_state:
             del st.session_state[k]
     st.rerun()
@@ -60,10 +77,8 @@ def render_header():
         st.image("assets/prodheg_horizontal.png", width='stretch')
     with col3:
         st.image("assets/segob_logo.png", width='stretch')
-
+    # TITULO
     st.title("PLAREN",text_alignment="center")
-    #st.subheader("Plataforma de Revisión Normativa del Consejo para Prevenir, Atender y Erradicar la Discriminación en el Estado de Guanajuato",
-    #             text_alignment="center")
     st.markdown("""
         <div style="
             background: #8055AB;
@@ -85,30 +100,25 @@ def render_footer():
     </div>
     """, unsafe_allow_html=True)
 
-# ---------- PANTALLA DE LOGIN ----------
+# ============================================
+# PÁGINA DE LOGIN
+# ============================================
 if not st.session_state.autenticado:
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         render_header()
-        
         user = st.selectbox(
             "Integrante:",
             options= [
-                'Presidencia del Consejo',
-                'Secretaría Ejecutiva del Consejo (PRODHEG)',
-                'Secretaría de Gobierno',
-                'Secretaría del Nuevo Comienzo',
-                'Secretaría de Derechos Humanos',
-                'Secretaría de Educación',
-                'Secretaría de Salud',
-                'Secretaría de las Mujeres',
+                'Presidencia del Consejo', 'Secretaría Ejecutiva del Consejo (PRODHEG)',
+                'Secretaría de Gobierno', 'Secretaría del Nuevo Comienzo',
+                'Secretaría de Derechos Humanos', 'Secretaría de Educación',
+                'Secretaría de Salud', 'Secretaría de las Mujeres',
                 'Dirección General del Sistema para el Desarrollo Integral de la Familia del Estado de Guanajuato',
                 'Procuraduría Estatal de Protección de Niñas, Niños y Adolescentes del Estado de Guanajuato',
-                'Secretaría Ejecutiva del Sistema de Protección de los derechos de Niñas, Niños y Adolescentes del Estado de Guanajuato:',
-                'Presidencia Municipal de Guanajuato',
-                'Presidencia Municipal de Moroleón',
-                'Presidencia Municipal de Silao de la Victoria',
-                'Presidencia Municipal de San Luis de la Paz',
+                'Secretaría Ejecutiva del Sistema de Protección de los derechos de Niñas, Niños y Adolescentes del Estado de Guanajuato',
+                'Presidencia Municipal de Guanajuato', 'Presidencia Municipal de Moroleón',
+                'Presidencia Municipal de Silao de la Victoria', 'Presidencia Municipal de San Luis de la Paz',
                 'Sectretaría Instructora'
             ],
             index=None,
@@ -120,38 +130,67 @@ if not st.session_state.autenticado:
                 st.session_state.usuario = user
                 st.rerun()
     st.stop()  # Esto evita que se cargue el resto de la app
+
 # ============================================
-# PÁGINA DE INICIO — ÍNDICE DE 8 CAPÍTULOS
+# PÁGINA DE INICIO
 # ============================================
 if st.session_state.pagina == "inicio":
     render_header()
     st.badge(f"Integrante: 👤 **{st.session_state.usuario}**")
-    st.markdown("### Índice")
-    st.divider()
 
-    catalogo, leyes = get_catalogo()
-    capitulos = catalogo['capitulo'].drop_duplicates().tolist()
+    # ── PASO 1: SI AÚN NO SE HA ELEGIDO LEY, MOSTRAR BOTONES ──
+    if st.session_state.ley_seleccionada is None:
+        st.markdown("### Selecciona la opción a revisar")
+        st.divider()
 
-    cols = st.columns(2)
-    for i, nombre in enumerate(capitulos):
-        with cols[i % 2]:
-            with st.container(border=True):
-                st.subheader(nombre,text_alignment="center")
-                if st.button(f"Entrar", key=f"btn_{i}", use_container_width=True):
-                    ir_a_capitulo(nombre)
+        leyes_disponibles = [
+            "Ley para Prevenir, Atender y Erradicar la Discriminación",
+            "Reglamento Interno del Consejo para Prevenir, Atender y Erradicar la Discriminación"
+        ]
 
+        cols = st.columns(2)
+        for i, nombre_ley in enumerate(leyes_disponibles):
+            with cols[i % 2]:
+                with st.container(border=True, height="stretch", vertical_alignment="distribute"):
+                    st.subheader(nombre_ley, text_alignment="center")
+                    if st.button("Revisar", key=f"btn_ley_{i}", width='stretch', type="primary"):
+                        st.session_state.ley_seleccionada = nombre_ley
+                        st.rerun()
+
+    # ── PASO 2: LEY YA ELEGIDA, MOSTRAR ÍNDICE DE CAPÍTULOS ──
+    else:
+        st.markdown(f"### {st.session_state.ley_seleccionada}",text_alignment="center")
+        if st.button("⬅️ Volver", type="secondary"):
+            volver_a_seleccion_ley()
+        st.markdown("#### Índice de capítulos")
+        st.divider()
+
+        # Filtrar catálogo por la ley seleccionada si existe la columna
+        try:
+            df_ley = catalogo[catalogo['ley'] == st.session_state.ley_seleccionada]
+        except:
+            df_ley = catalogo
+
+        capitulos = df_ley["capitulo"].drop_duplicates().tolist()
+
+        cols = st.columns(2)
+        for i, nombre in enumerate(capitulos):
+            with cols[i % 2]:
+                with st.container(border=True):
+                    st.subheader(nombre, text_alignment="center")
+                    if st.button(f"Entrar", key=f"btn_cap_{i}", width='stretch'):
+                        ir_a_capitulo(nombre)
 
 # ============================================
-# PÁGINA DE CAPÍTULO — SECCIÓN → ARTÍCULO → FRACCIÓN → OPINIÓN
+# PÁGINA DE CAPÍTULO
 # ============================================
 elif st.session_state.pagina == "capitulo":
     capitulo = st.session_state.capitulo_actual
-    catalogo, leyes = get_catalogo()
 
     if st.button("⬅️ Volver al índice", type="secondary"):
         volver_a_inicio()
 
-    st.title(f"📖 {capitulo}")
+    st.title(f"📖 {capitulo}",text_alignment="center")
     st.badge(f"Integrante: 👤 **{st.session_state.usuario}**")
     st.divider()
 
