@@ -110,12 +110,18 @@ def render_header():
 
 def render_footer():
     st.markdown("""
-    <hr>
-    <div style="text-align: center; color: grey; font-size: 0.9em;">
-        © 2026 COPRAEDEG |
-        Desarrollado por <a href="https://taquitoo3000.github.io/isael/" style="color: mediumorchid;">SECtech</a>
+    <div class="footer-badge-wrap">
+        <div class="footer-badge">
+            <span class="brand">PLAREN</span>
+            <span class="sep">|</span>
+            <span class="copy">© 2026 COPRAEDEG</span>
+            <span class="sep">|</span>
+            <span class="copy">Desarrollado por</span>
+            <a href="https://taquitoo3000.github.io/isael/">SECtech</a>
+        </div>
     </div>
     """, unsafe_allow_html=True)
+    
 
 # ============================================
 # PÁGINA DE LOGIN
