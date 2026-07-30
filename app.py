@@ -221,7 +221,7 @@ elif st.session_state.pagina == "capitulo":
     secciones = [s for s in secciones if s != ""]
 
     if secciones:
-        seccion = st.selectbox("🔹 Sección:", secciones, key="sel_seccion")
+        seccion = st.selectbox("🔹 **Sección**:", secciones, key="sel_seccion")
     else:
         seccion = ""
 
@@ -231,7 +231,7 @@ elif st.session_state.pagina == "capitulo":
         (catalogo['seccion']==seccion)
     ]
     resumenes = resumenes['resumen'].drop_duplicates().tolist()
-    resumen = st.selectbox("🔹 Resumen:", resumenes, key="sel_resumen")
+    resumen = st.selectbox("🔹 **Resumen**:", resumenes, key="sel_resumen")
     # ---------- 3. SELECCIONAR ARTÍCULO ----------
     articulos = catalogo[
         (catalogo['capitulo']==capitulo) &
@@ -239,7 +239,7 @@ elif st.session_state.pagina == "capitulo":
         (catalogo['resumen']==resumen)
     ]
     articulos = articulos['articulo'].drop_duplicates().tolist()
-    articulo = st.selectbox("🔹 Artículo:", articulos, key="sel_articulo")
+    articulo = st.selectbox("🔹 **Artículo**:", articulos, key="sel_articulo")
     # ---------- 3. ¿SELECCIONAR FRACCIÓN? ----------
     fracciones = catalogo[
         (catalogo['capitulo']==capitulo) &
@@ -251,7 +251,7 @@ elif st.session_state.pagina == "capitulo":
     fracciones = [f for f in fracciones if f != ""]
     if fracciones:
         fraccion = st.selectbox(
-            "🔹 Fracción:",
+            "🔹 **Fracción**:",
             fracciones,
             key="sel_fraccion"
         )
