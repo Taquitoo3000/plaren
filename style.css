@@ -1,7 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+    
+html, body, [class*="css"] {
+    font-family: 'Century Gothic', 'Montserrat', 'Arial', sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Century Gothic', 'Montserrat', 'Arial', sans-serif !important;
+}
+
+p, label, span, div, button, input, textarea, select {
+    font-family: 'Century Gothic', 'Montserrat', 'Arial', sans-serif !important;
+}
+
 /* Quitar cadenas de los headers */
 [data-testid="stHeaderActionElements"] {
     display: none !important;
 }
+/* Fondo para cards */
 .card-capitulo {
     border: 1px solid rgba(128, 85, 171, 0.3);
     border-radius: 12px;
