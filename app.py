@@ -282,33 +282,33 @@ elif st.session_state.pagina == "capitulo":
         st.markdown("**Tipo de Impacto**")
 
         pres_bolean=st.radio(
-            "Presupuestal",
+            "**Presupuestal**",
             options=['Sí requiere esfuerzo presupuestal','No requiere esfuerzo presupuestal'],
             index=1
         )
         presupues = (pres_bolean == 'Sí requiere esfuerzo presupuestal')
 
         jur_bolean=st.radio(
-            "Jurídico",
+            "**Jurídico**",
             options=['Sí requiere entramado normativo','No requiere entramado normativo'],
             index=1
         )
         jur_bolean = (jur_bolean == 'Sí requiere entramado normativo')
         ley = st.multiselect(
-            "Leyes que trastoca:",
+            "**Leyes que trastoca**:",
             leyes['titulo'].to_list(),
             disabled=not jur_bolean,
             key=f"ley_{ley_id}"
         )
 
         soc_bolean=st.radio(
-            "Social",
+            "**Social**",
             options=['Sí involucra grupos prioritarios','No involucra grupos prioritarios'],
             index=1
         )
         soc_bolean = (soc_bolean == 'Sí involucra grupos prioritarios')
         grupo_vul = st.multiselect(
-            "Grupos vulnerables afectados:",
+            "**Grupos vulnerables afectados**:",
             [
                 'Discapacidad Mental',
                 'Discapacidad Motriz',
