@@ -1,0 +1,17 @@
+/* Quitar cadenas de los headers */
+[data-testid="stHeaderActionElements"] {
+    display: none !important;
+}
+.card-capitulo {
+    border: 1px solid rgba(128, 85, 171, 0.3);
+    border-radius: 12px;
+    padding: 0.5rem;
+    min-height: 40px;
+    background-color: rgba(220, 204, 232, 0.897);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}

@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import base64
 from sqlalchemy import create_engine, text
 from database import get_catalogo, guardar_respuesta
 
@@ -14,20 +15,36 @@ st.set_page_config(
         'About': "# PLAREN\nPlataforma de Revisión Normativa."
     }
 )
-# OCULACIONES
-st.markdown("""
-    <style>
-    /* Quitar cadenas de los headers */
-    [data-testid="stHeaderActionElements"] {
-        display: none !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
+# FONDO
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+img_path = "assets/fondo_plaren.png"
+img_base64 = get_base64_of_bin_file(img_path)
+page_bg_img = f'''
+<style>
+.stApp {{
+    background-image: url("data:image/png;base64,{img_base64}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;  /* Se queda fija al hacer scroll */
+}}
+</style>
+'''
+# CSS personalizado
+def load_css():
+    with open("style.css", "r", encoding="utf-8") as f:
+        css = f.read()
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+st.markdown(page_bg_img, unsafe_allow_html=True)
 
 # ============================================
 # NAVEGACIÓN CON SESSION STATE
 # ============================================
 catalogo, leyes = get_catalogo()
+load_css()
 
 if "pagina" not in st.session_state:
     st.session_state.pagina = "inicio"
@@ -108,7 +125,7 @@ if not st.session_state.autenticado:
     with col2:
         render_header()
         user = st.selectbox(
-            "Integrante:",
+            "**Integrante:**",
             options= [
                 'Presidencia del Consejo', 'Secretaría Ejecutiva del Consejo (PRODHEG)',
                 'Secretaría de Gobierno', 'Secretaría del Nuevo Comienzo',
@@ -124,7 +141,7 @@ if not st.session_state.autenticado:
             index=None,
             key='sel_miembro'
         )
-        if st.button("Ingresar", width='stretch',disabled=(user is None)):
+        if st.button("Ingresar", width='stretch',disabled=(user is None), type='primary'):
             if user:
                 st.session_state.autenticado = True
                 st.session_state.usuario = user
@@ -173,13 +190,11 @@ if st.session_state.pagina == "inicio":
 
         capitulos = df_ley["capitulo"].drop_duplicates().tolist()
 
-        #cols = st.columns(2)
         for i, nombre in enumerate(capitulos):
-            #with cols[i % 2]:
-                with st.container(border=True):
-                    st.subheader(nombre, text_alignment="center")
-                    if st.button(f"Entrar", key=f"btn_cap_{i}", width='stretch'):
-                        ir_a_capitulo(nombre)
+            st.markdown(f'<div class="card-capitulo"><h3>{nombre}</h3>', unsafe_allow_html=True)
+            if st.button("Entrar", key=f"btn_cap_{i}", width='stretch', type='primary'):
+                ir_a_capitulo(nombre)
+            st.markdown('</div>', unsafe_allow_html=True)
 
 # ============================================
 # PÁGINA DE CAPÍTULO
@@ -246,7 +261,7 @@ elif st.session_state.pagina == "capitulo":
     ]['id']
 
     st.divider()
-    st.markdown(f"### {capitulo}: {seccion}\n\n{resumen}\n\n{articulo}\n\n{fraccion}")
+    st.markdown(f'<div class="card-capitulo"><h3>{capitulo}</h3><h4>{seccion}</h4><h5>{resumen}</h5>\n\n{articulo}\n\n{fraccion}</div>',unsafe_allow_html=True)
     st.divider()
 
     st.subheader("📝 Tu opinión")
