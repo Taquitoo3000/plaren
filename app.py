@@ -202,7 +202,7 @@ if st.session_state.pagina == "inicio":
 elif st.session_state.pagina == "capitulo":
     capitulo = st.session_state.capitulo_actual
 
-    if st.button("⬅️ Volver al índice", type="secondary"):
+    if st.button("⬅️ Volver al índice", key="brn_volver1", type="secondary"):
         volver_a_inicio()
 
     st.title(f"📖 {capitulo}",text_alignment="center")
@@ -332,7 +332,7 @@ elif st.session_state.pagina == "capitulo":
             key=f"gru_{ley_id}"
         )
         enviar = st.button("💾 Guardar opinión", use_container_width=True, key=f"btn_{ley_id}", type='primary')
-    if st.button("⬅️ Volver al índice", type="secondary"):
+    if st.button("⬅️ Volver al índice", key="brn_volver2", type="secondary"):
             volver_a_inicio()
 
     if enviar:
