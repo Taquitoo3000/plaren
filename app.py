@@ -331,7 +331,9 @@ elif st.session_state.pagina == "capitulo":
             disabled=not soc_bolean,
             key=f"gru_{ley_id}"
         )
-        enviar = st.button("💾 Guardar opinión", use_container_width=True, key=f"btn_{ley_id}")
+        enviar = st.button("💾 Guardar opinión", use_container_width=True, key=f"btn_{ley_id}", type='primary')
+    if st.button("⬅️ Volver al índice", type="secondary"):
+            volver_a_inicio()
 
     if enviar:
         if opinion.strip() == "":
