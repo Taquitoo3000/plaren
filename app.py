@@ -173,9 +173,9 @@ if st.session_state.pagina == "inicio":
 
         capitulos = df_ley["capitulo"].drop_duplicates().tolist()
 
-        cols = st.columns(2)
+        #cols = st.columns(2)
         for i, nombre in enumerate(capitulos):
-            with cols[i % 2]:
+            #with cols[i % 2]:
                 with st.container(border=True):
                     st.subheader(nombre, text_alignment="center")
                     if st.button(f"Entrar", key=f"btn_cap_{i}", width='stretch'):
