@@ -168,7 +168,7 @@ if st.session_state.pagina == "inicio":
         cols = st.columns(2)
         for i, nombre_ley in enumerate(leyes_disponibles):
             with cols[i % 2]:
-                st.markdown(f"<div class='card-capitulo'>{nombre_ley}",unsafe_allow_html=True)
+                st.markdown(f"<div class='card-ley'><h4>{nombre_ley}</h4>",unsafe_allow_html=True)
                 if st.button("Revisar", key=f"btn_ley_{i}", width='stretch', type="primary"):
                     st.session_state.ley_seleccionada = nombre_ley
                     st.rerun()
