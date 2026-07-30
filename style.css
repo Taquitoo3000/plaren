@@ -34,7 +34,7 @@ p, label, span, div, button, input, textarea, select {
     border: 1px solid rgba(128, 85, 171, 0.3);
     border-radius: 12px;
     padding: 0.5rem;
-    min-height: 80px;
+    min-height: 100px;
     background-color: rgba(231, 231, 231, 0.822);
     display: flex;
     flex-direction: column;
