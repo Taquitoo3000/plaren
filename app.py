@@ -152,6 +152,14 @@ if not st.session_state.autenticado:
                 st.session_state.autenticado = True
                 st.session_state.usuario = user
                 st.rerun()
+        with open("assets/MANUAL.pdf", "rb") as pdf_file:
+            st.download_button(
+                label="¿Cómo usarme?",
+                data=pdf_file,
+                file_name="MANUAL.pdf",
+                mime="application/pdf",
+                width='stretch'
+            )
     st.stop()  # Esto evita que se cargue el resto de la app
 
 # ============================================
