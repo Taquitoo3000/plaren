@@ -158,7 +158,7 @@ if not st.session_state.autenticado:
                 data=pdf_file,
                 file_name="MANUAL.pdf",
                 mime="application/pdf",
-                width='stretch'
+                width='stretch',
             )
     st.stop()  # Esto evita que se cargue el resto de la app
 
