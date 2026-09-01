@@ -176,7 +176,7 @@ if st.session_state.pagina == "inicio":
 
         leyes_disponibles = [
             "Ley para Prevenir, Atender y Erradicar la Discriminación",
-            "Reglamento Interno del Consejo para Prevenir, Atender y Erradicar la Discriminación"
+            "Reglamento de la Ley para Prevenir, Atender y Erradicar la Discriminación en el Estado de Guanjuato"
         ]
 
         cols = st.columns(2)
